@@ -4,10 +4,12 @@ import { getChars } from '../services/ACApi';
 
 export const useStuff = () => {
   const { id } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [character, setCharacter] = useState({});
+  console.log(id);
+  const [loading, setLoading] = useState();
+  const [character, setCharacter] = useState();
   
   useEffect(() => {
+    setLoading(true);
     getChars(id)
       .then((character) => setCharacter(character))
       .then(() => setLoading(false));

@@ -1,14 +1,18 @@
 import React from 'react';
-import { screen, render } from '@testing-library/react';
+import { screen, render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-// import mortydetail from '../fixtures/mortydetail.json';
+// import charDetails from '../fixtures/CharContainerRes.json';
 import ACCharacterDetails from './CharContainer';
 
 const mockServer = setupServer(
-  rest.get('https://ac-vill.herokuapp.com/villagers/:id', (req, res, ctx) => {
-    return res(ctx.json({ }));
+  rest.get('https://ac-vill.herokuapp.com/villagers/5f5fb4bbbfd05c2aed82e460', (req, res, ctx) => {
+    return res(ctx.json({
+      name: 'Admiral',
+      quote: 'Only quitters give up.',
+      personality: 'cranky'
+    }));
   })
 );
 
@@ -18,15 +22,15 @@ describe('chartater detail page', () => {
 
   it('has the details of only a single character', async () => {
     render(
-      <MemoryRouter initialEntries={['/2']}>
+      <MemoryRouter initialEntries={[{ pathname: 'https://ac-vill.herokuapp.com/villagers/5f5fb4bbbfd05c2aed82e460' }]}>
         <ACCharacterDetails />
       </MemoryRouter>
     );
+    screen.getByAltText('spin');
 
-    // screen.getByAltText('loading spinner');
-
-    const character = await screen.findByText('Admiral', { exact: false });
-
-    expect(character).toMatchSnapshot();
+    return waitFor(() => {
+      const character = screen.findByText('Admiral', { exact: false });
+      expect(character).toMatchSnapshot();
+    }, { timeout: 2000 });
   });
 });

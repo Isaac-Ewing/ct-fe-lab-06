@@ -7,7 +7,8 @@ export const useListStuff = () => {
   
   useEffect(() => { getChars()
     .then((characters) => setCharacters(characters))
-    .finally(() => setLoading(false));
+    .then(() => setLoading(false));
   }, []);
+  console.log(loading);
   return { characters, loading };
 };
